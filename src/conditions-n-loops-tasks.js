@@ -452,8 +452,53 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  function shuffler(s) {
+    const arr = [...s];
+    let left = '';
+    let right = '';
+    for (let i = 0; i < arr.length; i += 1) {
+      if (i % 2 === 0) {
+        right += arr[i];
+      } else {
+        left += arr[i];
+      }
+    }
+    return left + right;
+  }
+
+  if (str.length < 3) return str;
+  const isEvenLen = str.length % 2 === 0;
+  let cache = [];
+  let isCacheFull = false;
+  const firstChar = str.charAt(0);
+  let lastChar = '';
+  let substrToShuffle = '';
+  if (isEvenLen) {
+    lastChar = str.charAt(str.length - 1);
+    substrToShuffle = str.slice(1, str.length - 1);
+  } else {
+    substrToShuffle = str.slice(1);
+  }
+  for (let i = 0; i < iterations; i += 1) {
+    if (isCacheFull) {
+      if (iterations % cache.length === 0) {
+        return str;
+      }
+      substrToShuffle = cache[(iterations % cache.length) - 1];
+      i = iterations;
+    } else {
+      const tmpStr = shuffler(substrToShuffle);
+      substrToShuffle = tmpStr;
+      if (firstChar + substrToShuffle + lastChar === str) {
+        cache = [...cache, tmpStr];
+        isCacheFull = true;
+      } else {
+        cache = [...cache, tmpStr];
+      }
+    }
+  }
+  return firstChar + substrToShuffle + lastChar;
 }
 
 /**
