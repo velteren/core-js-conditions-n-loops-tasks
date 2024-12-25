@@ -476,9 +476,9 @@ function shuffleChar(str, iterations) {
   let substrToShuffle = '';
   if (isEvenLen) {
     lastChar = str.charAt(str.length - 1);
-    substrToShuffle = str.slice(1, str.length - 1);
+    substrToShuffle = str.substring(1, str.length - 1);
   } else {
-    substrToShuffle = str.slice(1);
+    substrToShuffle = str.substring(1);
   }
   for (let i = 0; i < iterations; i += 1) {
     if (isCacheFull) {
