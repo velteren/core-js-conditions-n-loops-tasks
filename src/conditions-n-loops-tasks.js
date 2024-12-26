@@ -431,21 +431,47 @@ function rotateMatrix(matrix) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(arr) {
-  if (arr.length < 2) return arr;
+function sortByAsc(array) {
+  const workArray = array;
 
-  const kernel = arr[0];
-  let left = [];
-  let right = [];
-
-  for (let i = 1; i < arr.length; i += 1) {
-    if (arr[i] < kernel) {
-      left = [...left, arr[i]];
-    } else {
-      right = [...right, arr[i]];
+  function quickSort(arr) {
+    let tmp = arr;
+    if (tmp.length <= 1) return tmp;
+    if (tmp.length === 2) {
+      if (tmp[0] > tmp[1]) {
+        [tmp[0], tmp[1]] = [tmp[1], tmp[0]];
+      }
+      return tmp;
     }
+    if (tmp.length >= 3) {
+      let middleIndex;
+      if (tmp.length % 2 !== 0) {
+        middleIndex = Math.floor(tmp.length / 2);
+      } else {
+        middleIndex = tmp.length / 2 - 1;
+      }
+      const middle = tmp[middleIndex];
+      let left = [];
+      let right = [];
+      for (let i = 0; i < tmp.length; i += 1) {
+        if (i !== middleIndex) {
+          if (tmp[i] < middle) {
+            left = [...left, tmp[i]];
+          } else {
+            right = [...right, tmp[i]];
+          }
+        }
+      }
+      tmp = [...quickSort(left), middle, ...quickSort(right)];
+    }
+    return tmp;
   }
-  return [...sortByAsc(left), kernel, ...sortByAsc(right)];
+
+  const tmp = quickSort(array);
+  for (let i = 0; i < array.length; i += 1) {
+    workArray[i] = tmp[i];
+  }
+  return workArray;
 }
 
 /**
