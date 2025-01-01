@@ -434,40 +434,48 @@ function rotateMatrix(matrix) {
 function sortByAsc(array) {
   const workArray = array;
 
-  function quickSort(arr) {
-    let tmp = arr;
-    if (tmp.length <= 1) return tmp;
-    if (tmp.length === 2) {
-      if (tmp[0] > tmp[1]) {
-        [tmp[0], tmp[1]] = [tmp[1], tmp[0]];
-      }
-      return tmp;
-    }
-    if (tmp.length >= 3) {
-      let middleIndex;
-      if (tmp.length % 2 !== 0) {
-        middleIndex = Math.floor(tmp.length / 2);
-      } else {
-        middleIndex = tmp.length / 2 - 1;
-      }
-      const middle = tmp[middleIndex];
-      let left = [];
-      let right = [];
-      for (let i = 0; i < tmp.length; i += 1) {
-        if (i !== middleIndex) {
-          if (tmp[i] < middle) {
-            left = [...left, tmp[i]];
-          } else {
-            right = [...right, tmp[i]];
-          }
-        }
-      }
-      tmp = [...quickSort(left), middle, ...quickSort(right)];
-    }
-    return tmp;
+  function getMaxOfArray(numArray) {
+    return Math.max.apply(null, numArray);
   }
 
-  const tmp = quickSort(array);
+  let positive = [];
+  let negative = [];
+  for (let i = 0; i < array.length; i += 1) {
+    if (array[i] >= 0) {
+      positive = [...positive, array[i]];
+    } else {
+      negative = [...negative, Math.abs(array[i])];
+    }
+  }
+
+  function countSort(arr) {
+    const aLink = arr;
+    const max = getMaxOfArray(arr);
+    let countArr = [];
+
+    for (let i = 0; i < max + 1; i += 1) {
+      countArr = [...countArr, 0];
+    }
+    for (let i = 0; i < arr.length; i += 1) {
+      countArr[arr[i]] += 1;
+    }
+    let b = 0;
+    for (let i = 0; i < max + 1; i += 1) {
+      for (let j = 0; j < countArr[i]; j += 1) {
+        aLink[b] = i;
+        b += 1;
+      }
+    }
+    return aLink;
+  }
+
+  const pos = countSort(positive);
+  const neg = countSort(negative);
+  let negFinal = [];
+  for (let i = neg.length - 1; i >= 0; i -= 1) {
+    negFinal = [...negFinal, -neg[i]];
+  }
+  const tmp = [...negFinal, ...pos];
   for (let i = 0; i < array.length; i += 1) {
     workArray[i] = tmp[i];
   }
