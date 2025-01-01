@@ -433,49 +433,21 @@ function rotateMatrix(matrix) {
  */
 function sortByAsc(array) {
   const workArray = array;
-
-  function getMaxOfArray(numArray) {
-    return Math.max.apply(null, numArray);
-  }
-
-  let positive = [];
-  let negative = [];
-  for (let i = 0; i < array.length; i += 1) {
-    if (array[i] >= 0) {
-      positive = [...positive, array[i]];
-    } else {
-      negative = [...negative, Math.abs(array[i])];
-    }
-  }
-
-  function countSort(arr) {
-    const aLink = arr;
-    const max = getMaxOfArray(arr);
-    let countArr = [];
-
-    for (let i = 0; i < max + 1; i += 1) {
-      countArr = [...countArr, 0];
-    }
-    for (let i = 0; i < arr.length; i += 1) {
-      countArr[arr[i]] += 1;
-    }
-    let b = 0;
-    for (let i = 0; i < max + 1; i += 1) {
-      for (let j = 0; j < countArr[i]; j += 1) {
-        aLink[b] = i;
-        b += 1;
+  function quickSort(arr) {
+    if (arr.length < 2) return arr;
+    const kernel = arr[0];
+    const left = [];
+    const right = [];
+    for (let i = 1; i < arr.length; i += 1) {
+      if (arr[i] < kernel) {
+        left[left.length] = arr[i];
+      } else {
+        right[right.length] = arr[i];
       }
     }
-    return aLink;
+    return [...sortByAsc(left), kernel, ...sortByAsc(right)];
   }
-
-  const pos = countSort(positive);
-  const neg = countSort(negative);
-  let negFinal = [];
-  for (let i = neg.length - 1; i >= 0; i -= 1) {
-    negFinal = [...negFinal, -neg[i]];
-  }
-  const tmp = [...negFinal, ...pos];
+  const tmp = quickSort(array);
   for (let i = 0; i < array.length; i += 1) {
     workArray[i] = tmp[i];
   }
