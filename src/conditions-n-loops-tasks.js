@@ -432,26 +432,48 @@ function rotateMatrix(matrix) {
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
 function sortByAsc(array) {
-  const workArray = array;
-  function quickSort(arr) {
-    if (arr.length < 2) return arr;
-    const kernel = arr[0];
-    const left = [];
-    const right = [];
-    for (let i = 1; i < arr.length; i += 1) {
-      if (arr[i] < kernel) {
-        left[left.length] = arr[i];
-      } else {
-        right[right.length] = arr[i];
-      }
-    }
-    return [...sortByAsc(left), kernel, ...sortByAsc(right)];
-  }
-  const tmp = quickSort(array);
+  const A = array;
+  if (A.length < 2) return A;
+  const left = [];
+  const right = [];
+  const C = [];
   for (let i = 0; i < array.length; i += 1) {
-    workArray[i] = tmp[i];
+    C[C.length] = 0;
+    if (i < Math.floor(A.length / 2)) {
+      left[left.length] = array[i];
+    } else {
+      right[right.length] = array[i];
+    }
   }
-  return workArray;
+  const L = sortByAsc(left);
+  const R = sortByAsc(right);
+  let n = 0;
+  let m = 0;
+  let k = 0;
+  while (n < L.length && m < R.length) {
+    if (L[n] <= R[m]) {
+      C[k] = L[n];
+      n += 1;
+    } else {
+      C[k] = R[m];
+      m += 1;
+    }
+    k += 1;
+  }
+  while (n < L.length) {
+    C[k] = L[n];
+    n += 1;
+    k += 1;
+  }
+  while (m < R.length) {
+    C[k] = R[m];
+    m += 1;
+    k += 1;
+  }
+  for (let i = 0; i < A.length; i += 1) {
+    A[i] = C[i];
+  }
+  return A;
 }
 
 /**
